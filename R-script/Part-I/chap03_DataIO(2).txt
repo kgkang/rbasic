@@ -1,0 +1,58 @@
+﻿#######################
+## 2. 데이터 저장하기
+#######################
+
+# 2-1. 화면(콘솔) 출력
+
+# 1) cat() 함수
+x <- 10
+y <- 20
+z <- x * y
+cat("x*y의 결과는 ", z ," 입니다.\n")  # \n 줄바꿈
+cat("x*y = ", z)
+
+# 2) print() 함수
+print(z) # 변수 또는 수식만 가능
+
+
+# 2-2. 파일에 데이터 저장
+
+# 1) sink() 함수를 이용 파일 저장
+setwd("C:/Rwork/output") 
+sink("savework.txt") # 저장할 파일명
+
+# studentexcel.xlsx 파일 선택
+studentx <- read.xlsx(file.choose(), sheetIndex=1, encoding="UTF-8") 
+studentx #출력되는 값이 화면에 나타나지 않고 파일에 저장됨
+sink() # 해제
+
+
+# 2) write.table()함수 이용 파일 저장
+getwd() # C:/Rwork/output 경로 확인 
+
+#(1) 기본옵션으로 저장 - 행 이름과 따옴표 붙음
+write.table(studentx, "stdt.txt") 
+#(2) 행 이름 제거하여 저장
+write.table(studentx, "stdt2.txt", row.names=FALSE) 
+#(3) 따옴표 제거하여 저장
+write.table(studentx, "stdt3.txt", row.names=FALSE, quote=FALSE) 
+
+
+# 3) write.xlsx() 함수 이용 파일 저장 - 엑셀 파일로 저장
+library(xlsx) # excel data 입출력 함수 제공
+
+# studentexcel.xlsx 파일 선택
+st.df <- read.xlsx(file.choose(), sheetIndex=1, encoding="UTF-8")
+str(st.df)
+write.xlsx(st.df, "studentx.xlsx") # excel형식으로 저장
+
+#4) write.csv() 함수 이용 파일 저장
+# data.frame 형식의 데이터를 csv 형식으로 저장
+setwd("C:/Rwork/output")
+st.df
+write.csv(st.df,"stdf.csv", row.names=F, quote=F) # 행 이름 제거
+
+# --------------------------------------------------------
+# <데이터 입출력 연습문제>
+# --------------------------------------------------------     
+

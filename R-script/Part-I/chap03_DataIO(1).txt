@@ -1,0 +1,90 @@
+﻿##########################
+##  1. 데이터 불러오기
+##########################
+
+
+# 1-1. 키보드 입력
+
+# 1) scan() 함수를 이용
+# 숫자입력 
+x <- scan()
+
+# 합계 구하기
+sum <- sum(x) 
+sum
+
+# 문자입력
+y <- scan(what="")
+
+
+# 2) edit() 함수를 이용한 입력
+df = data.frame() #빈 데이터프레임 생성
+df = edit(df) # 데이터 편집기
+
+# 1-2. 파일 데이터 가져오기
+
+# 1) read.table() 함수 이용
+
+# (1) 컬럼명이 없는 파일 불러오기
+getwd()
+setwd("C:/Rwork/Part-I")
+student  <- read.table(file="student.txt")
+
+# (2) 컬럼명이 있는 파일 불러오기
+student1  <- read.table(file="student1.txt", header=TRUE)
+
+# (3) 구분자가 있는 경우(세미콜론, 탭)
+student2  <- read.table(file="student2.txt", sep=";", header=TRUE) # 세미콜론
+
+# (4) 특정문자 NA 처리(- 문자열을 NA로 처리)
+student3<-read.table(file="student3.txt", sep=" ", 
+                          header=TRUE, na.strings="-")
+
+# 2)  read.csv() 함수 이용
+  
+student4 <- read.csv(file="student4.txt", na.strings="-")
+
+student4 <- read.csv(file.choose(), sep=",", na.strings="-")   # 파일열기 
+
+
+# 3) read.xlsx() 함수 이용 - 엑셀데이터 읽어오기
+Sys.setenv(JAVA_HOME='C:/Program Files/Java/jre7')
+
+# rJava를 로드하기 때문에 rJava 패키지 설치 필요
+install.packages("rJava")
+library(rJava) # 로딩
+
+# xlsx 패키지 설치
+install.packages("xlsx")
+library(xlsx) # 로딩
+
+# studentex.xlsx 파일 선택
+studentex <- read.xlsx(file.choose(), 
+                      sheetIndex=1, encoding="UTF-8")
+studentex
+
+
+# 4) 웹문서 가져오기
+install.packages("XML")
+library(XML)
+
+# 미국의 각 주별 1인당 소득자료
+info.url <- "http://www.infoplease.com/ipa/A0104652.html"
+
+# readHTMLTable() 함수 역할 - <table>,<tr>,<td> 태그 이용
+info.df<-readHTMLTable(info.url, header=T, which=1, stringsAsFactors=F)
+# header=T : 컬럼명 있음, which=1 : 첫번째, stringsAsFactors 문자는 범주(값의 목록)처리 안함
+info.df
+
+# 레코드 수 변경 확인 <- update
+info.df<-info.df[1:53,] # NA 레코드 제거(54행 제거)
+
+info.df<-info.df[c(-2,-28),] # $가 있는 행 제거
+
+
+# 컬럼명 변경
+info.df<-info.df[c(-1,-2),] # 1,2행 제거
+
+# 컬럼명 추가
+names(info.df) <- c("State",'y1980','y1990','y1995','y2000','y2003','y2006','y2009','y2012','y2015')
+head(info.df) 

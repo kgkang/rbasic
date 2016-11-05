@@ -1,0 +1,40 @@
+﻿##########################
+##  2. 주요 R 내장 함수 
+##########################
+
+seq(-2, 2, by=.2) # 0.2씩 증가
+seq(length=10, from=-5, by=.2) # -5부터 10개 생성 
+rnorm(20, mean = 0, sd = 1) # 정규분포를 따르는 20개 데이터 생성
+runif(20, min=0, max=100) # 0~100사이의 20개 난수 생성
+sample(0:100, 20) # 0~100사이의 20개 sample 생성
+vec<-1:10
+min(vec)
+max(vec)
+range(vec)
+mean(vec) # 평균
+median(vec) # 중위수
+sum(vec) 
+prod(vec) # 데이터의 곱
+
+factorial(5) # 팩토리얼=120
+abs(-5)  # 절대값
+sd(rnorm(10)) # 표준편차 구하기 
+table(vec) # 빈도수 
+sqrt(16) # 4 
+4^2 # 16
+# 나머지 구하기
+5%%3 # 2
+6%%2 # 0
+
+
+getwd()
+setwd("c:/Rwork/Part-I")
+excel <- read.csv("excel.csv", header=TRUE)
+head(excel,10) 
+
+#colMeans()함수 : 각 열의 평균 계산
+colMeans(excel[1:5])
+
+summary(excel)  
+
+

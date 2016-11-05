@@ -1,0 +1,43 @@
+﻿#######################
+## 2. Matrix 
+#######################
+# - 동일 데이터 타입을 갖는 2차원 배열
+# - 관련함수 : rbind():행묶음, cbind():컬럼 묶음, apply() : 함수적용
+
+# (1) c()함수 이용 matrix 생성
+m <- matrix(c(1:5))     
+m <- matrix(c(1:10), nrow=3) 
+m <- matrix(c(1:10), nrow=2, byrow=T) 
+
+# (2) rbind()/cbind() 함수 이용      
+x1 <- c(5,40,50:52) 
+x2 <- c(30,5,6:8) 
+mr <- rbind(x1,x2) 
+mc <- cbind(x1,x2)  
+
+# (3) matrix()함수 이용
+m3 <- matrix(10 : 19, 2) #10개 데이터를 2행으로 생성
+
+# 자료와 객체 Type 보기
+mode(m3); class(m3) #numeric, matrix
+
+# ma행렬 데이터 접근 : [첨자,첨자] 이용
+m3[1,] # 1행 전체
+m3[,5] # 5열 전체
+m3[2,3] #2행 3열의 데이터 1개 -> 15
+m3[1, c(2:5)] # 1행에서 2~5열 데이터 4개
+
+# matrix 데이터 처리 함수      
+x <- matrix(c(1:9), nrow=3, ncol=3) # 3행 3열 matrix 객체
+length(x) # 데이터 개수 
+ncol(x); nrow(x) # 열/행 수
+
+# matrix에 컬럼이름 적용하기
+colnames(x) <- c("one", "two", "three")   
+
+# 형식) apply(변수, 행/열, 함수)
+apply(x,1,max) # 행 단위 최대값
+apply(x,1,min) # 행 단위 최대값
+apply(x,2,mean) # 열 단위 평균값   
+
+# 사용자 함수와 apply() 적용

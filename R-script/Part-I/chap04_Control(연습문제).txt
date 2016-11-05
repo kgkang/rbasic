@@ -1,0 +1,19 @@
+﻿# chap04_Control (연습문제)
+
+
+#<연습문제> 다음 client 데이터프레임을 대상으로 조건에 맞게 처리하시오.
+
+name <-c("aaa","bbb","ccc","ddd")
+gender <- c("F","M","M","F")
+price <-c(50,65,45,75)
+client <- data.frame(name,gender,price)
+
+# <조건1> price가 65만원 이상인 고객은 "Best" 미만이면 
+#     "Normal" 문자열을 result 변수에 넣고, client의 객체에 컬럼으로 추가하기
+
+# <조건2> result의 빈도수를 구하시오. 힌트) table()함수 이용
+
+
+# <조건3> gender가 'M'이면 "Male", 'F'이면 "Female" 형식으로 client의 객체에
+#  gender2 컬럼을 추가하고 빈도수 구하기
+
