@@ -1,0 +1,53 @@
+﻿##########################
+##  1. 탐색적 데이터 조회
+##########################
+
+# 실습 데이터 읽어오기
+
+setwd("C:/Rwork/Part-II")
+dataset <- read.csv("dataset.csv", header=TRUE) # 헤더가 있는 경우
+
+
+#1) 데이터 셋 보기
+
+# 데이터셋 전체 보기
+print(dataset) 
+View(dataset) # 뷰어창 출력
+
+# 간단이 앞쪽/뒤쪽 조회
+head(dataset) 
+tail(dataset) 
+
+# 2) 데이터 셋 구조보기
+names(dataset) # 변수명(컬럼)
+attributes(dataset) # names(), class, row.names
+str(dataset) # 데이터 구조보기
+
+# 3) 데이터 셋 조회 
+dataset$age 
+dataset$resident
+length(dataset$age) # data 수-300개 
+
+x <- dataset$gender # 조회결과 변수 저장
+y <- dataset$price
+x;y
+
+plot(dataset$price) # 산점도 : 전반적인 가격분포 보기
+
+# $기호 대신 [""]기호를 이용한 변수 조회
+dataset["gender"] 
+dataset["price"]
+
+# 색인(index)으로 칼럼 조회 
+dataset[2] # 두번째 컬럼
+dataset[6] # 여섯번째 컬럼
+dataset[3,] # 3번째 관찰치(행) 전체
+dataset[,3] # 3번째 변수(열) 전체
+
+# dataset에서 2개 이상 칼럼 조회
+dataset[c("job","price")]
+dataset[c(2,6)] 
+
+dataset[c(1,2,3)] 
+dataset[c(1:3)] 
+dataset[c(2,4:6,3,1)] 

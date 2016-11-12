@@ -1,0 +1,9 @@
+﻿#chap10_Formal_InFormal(연습문제)
+
+#<연습문제1> textExam.txt 데이터 셋을 대상으로 토픽분석을 수행하고, 단어구름으로 시각화하시오.
+
+#<연습문제2> textExam.txt  데이터 셋을 대상으로 연관어 분석을 수행하고, 연관 단어를 시각화하시오.
+
+# textExam.txt  데이터 셋 가져오기
+text <- file("c:/Rwork/Part-II/textExam.txt ", encoding="UTF-8")
+textl <- readLines(text) 

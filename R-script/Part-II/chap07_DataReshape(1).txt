@@ -1,0 +1,55 @@
+﻿######################################################
+# 1. plyr 패키지 활용 - 데이터 병합
+######################################################
+
+install.packages('plyr')
+library(plyr) # 패키지 로딩
+
+# 병합할 데이터프레임 셋 만들기
+x = data.frame(ID = c(1,2,3,4,5), height = c(160,171,173,162,165))
+y = data.frame(ID = c(5,4,1,3,2), weight = c(55,73,60,57,80))
+
+# 1. join() : plyr패키지 제공 함수
+z <- join(x,y,by='ID') # ID컬럼으로 조인
+z
+
+x = data.frame(ID = c(1,2,3,4,6), height = c(160,171,173,162,180))
+y = data.frame(ID = c(5,4,1,3,2), weight = c(55,73,60,57,80))
+
+# left 조인
+z <- join(x,y,by='ID') # ID컬럼으로 left 조인(왼쪽 변수 기준)
+
+z <- join(x,y,by='ID', type='inner') # type='inner' : 값이 있는 것만 조인
+
+z <- join(x,y,by='ID', type='full') # type='full' : 모든 항목 조인
+
+
+# key값으로 병합하기
+
+x = data.frame(key1 = c(1,1,2,2,3), 
+               key2 = c('a','b','c','d','e'),
+               val1 = c(10,20,30,40,50))
+y = data.frame(key1 = c(3,2,2,1,1), 
+               key2 = c('e','d','c','b','a'),
+               val2 = c(500,400,300,200,100))
+
+join(x,y,by=c('key1', 'key2'))
+
+
+# 2. tapply() 함수 이용 - 그룹별 통계치 구하기
+# 형식) tapply(적용data, 집단변수, 함수)
+
+# 꽃의 종류별(Species)로 꽃받침 길이 평균 구하기
+tapply(iris$Sepal.Length, iris$Species, mean) 
+
+
+# 3. ddply() : plyr 패키지 제공 함수
+# 형식) ddply(dataframe, .(집단변수), 요약집계, 컬럼명=함수(변수))
+
+# 꽃의 종류별(Species)로 꽃받침 길이(Sepal.Length)의 평균 계산
+a <- ddply(iris, .(Species), summarise, avg = mean(Sepal.Length))
+
+
+# -------------------------------------------------------------
+# <plyr 패키지 관련 연습문제>
+# -------------------------------------------------------------

@@ -1,0 +1,74 @@
+﻿#############################
+##  2. 연속변수 시각화
+#############################
+
+library(RSADBE)
+data(resistivity) # RSADBE패키지에서 제공하는 데이터셋
+class(resistivity) 
+resistivity 
+
+#1) 상자 그래프 시각화
+
+boxplot(resistivity, range=0) # 두 Process 상자 그래프 시각화
+
+boxplot(resistivity, range=0, notch=T) 
+# notch=T : 중위수 비교시 사용되는 옵션
+
+abline(h=0.140, lty=3) # 기준선 추가
+
+
+#2) 히스토그램 시각화
+install.packages("psych")
+library(psych)
+galton # psych 패키지 제공 데이터 셋
+
+data(galton) # 자식과 부모의 키 사이의 관계 
+
+par(mfrow=c(1,2))
+hist(galton$parent,breaks="FD", xlab="Height to Parent",
+     main="Histogram for Parent Height with Freedman-Diaconis",
+     xlim=c(60,75))
+# breaks="FD" : Freedman-Diaconis, 구간 너비
+
+
+hist(galton$parent,breaks="Sturges", xlab="Height to Parent",
+     main="Histogram for Parent Height with Sturges",
+     xlim=c(60,75))
+#breaks="Sturges"  : 구간 너비
+
+
+hist(galton$child, xlab="Height to Child",
+     main="Histogram for Child Height with Freedman-Diaconis",
+     xlim=c(60,75), col="mistyrose")
+# col="mistyrose" : 색상(흐릿한 장미) 적용
+
+hist(galton$child, xlab="Height to Child",
+     main="Histogram for Child Height with Sturges",
+     xlim=c(60,75), col="magenta")
+# col="magenta" : 색상(진홍색) 적용
+
+#3) 산점도 시각화
+price<- runif(10, min=1, max=100) # 난수 발생
+
+plot(price)
+
+par(mfrow=c(2,2)) # 2행 2열 차트 그리기
+plot(price, type="l") # 유형 : 실선
+plot(price, type="o") # 유형 : 원형과 실선
+plot(price, type="h") # 직선
+plot(price, type="s") # 꺾은선
+
+# plot() 함수 속성 : pch : 연결점 문자타입-> plotting characher-번호(1~30)
+plot(price, type="o", pch=5) # 빈 사각형
+plot(price, type="o", pch=15)# 채워진 마름모
+plot(price, type="o", pch=20, col="blue") 
+plot(price, type="o", pch=20, col="orange", cex=1.5) 
+
+plot(price, type="o", pch=20, col="green", cex=2.0, lwd=3) 
+
+# 산점도와 회귀선 시각화(galton 데이터 셋)
+par(mfrow=c(1,1))
+plot(child~parent, data=galton) # y ~ x
+
+out = lm(child~parent, data=galton)
+abline(out, col="red") 

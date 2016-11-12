@@ -1,0 +1,3 @@
+https://downloads.mariadb.org/
+
+https://mariadb.com

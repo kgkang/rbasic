@@ -15,3 +15,7 @@
    http://www.oracle.com
 
 ※ RStudio 실행 : 관리자 권한으로 실행
+
+
+마리아디비 설치 (https://mariadb.org/)
+mariadb-10.1.19-winx64.msi

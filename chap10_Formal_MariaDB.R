@@ -1,0 +1,98 @@
+# chap10_Formal(MariaDB)
+
+
+
+#######################################
+#1. 정형 데이터 처리 - (MariaDB, Oracle DB)
+#######################################
+# DB(RDB) 연결 - ODBC, JDBC, DBI
+# - Oracle/MySql 실습
+
+
+# Maria DB 정형 데이터 처리
+
+# - DB(RDB) 연결 방법 : ODBC와 JDBC 방식
+# ODBC(Open DataBase Connectivity) 연결방식 : DB 접속을 위해서 DB을 열어주는 API
+# JDBC(Java DataBase Connectivity) 연결방식 : JAVA로 작성된 프로그램으로 DBMS에 연결하는 API
+# -> 자바로 만들어진 R 패키지 프로그램으로 DBMS에 연결하기 위해서는 JDBC의 API를 지원하는 
+# RJDBC 패키지를 설치하면 된다.
+
+# DB 연결
+# 1. RJDBC 패키지에서 제공되는 JDBC()함수를 이용하여 해당 DBMS의 driver 지정
+# 2. dbConnect()함수에 4개 인수(driver,url,id,password)를 적용하여 DB에 연결 
+
+
+# 패키지 설치
+# - RJDBC 패키지를 사용하기 위해서는 우선 java를 설치해야 한다.
+# install.packages("rJava")
+install.packages("DBI")
+install.packages("RJDBC") # JDBC()함수 제공 
+
+# 패키지 로딩
+library(DBI)
+Sys.setenv(JAVA_HOME='C:\\Rutil\\Java\\jre1.8.0_111')
+library(rJava)
+library(RJDBC) # rJava에 의존적이다.
+
+################ MariaDB or MySql ###############
+drv <- JDBC(driverClass="com.mysql.jdbc.Driver", 
+            classPath="C:\\Rutil\\mysql-connector-java-5.1.40\\mysql-connector-java-5.1.40-bin.jar")
+
+# driver가 완전히 로드된 후 db를 연결한다.
+conn <- dbConnect(drv, "jdbc:mysql://127.0.0.1:3306/work", "kkg", "kkg")
+######################################
+# db 연결과정에 다음과 같은 error message가 출력되면 시스템을 재부팅 후 다시 연결한다.
+#Error in .jcall(drv@jdrv, "Ljava/sql/Connection;", "connect", as.character(url)[1],  : 
+#      java.lang.NoClassDefFoundError: Could not initialize class com.mysql.jdbc.Util
+######################################                
+
+# 1. 테이블의 컬럼 보기 
+# 형식) dbListFields(con, "DBtable")
+
+dbListFields(conn, "goods") # conn, table name
+
+# 2. 테이블을 데이터프레임으로 가져오기 
+# 형식) dbReadTable(con, "DBtable")
+goods.db<- dbReadTable(conn, "goods")
+goods.db
+
+
+# 3. sql문 실행 - 전체 레코드 검색(select문)
+query = "select * from goods"
+goodsAll <- dbGetQuery(conn, query)
+goodsAll
+
+# 4. sql문 실행 - 조건 검색
+query = "select * from goods where su >= 3"
+goodsOne <- dbGetQuery(conn, query)
+goodsOne
+
+
+# 5. sql문 실행 - 정렬 검색 
+query = "SELECT * FROM goods order by dan desc"
+dbGetQuery(conn, query)
+
+
+## table 구조 변경(추가,수정,삭제)
+## 레코드 추가
+query <- "insert into goods values(5,'가스레인지',2,350000)"
+dbSendUpdate(conn, query)
+dbGetQuery(conn,"select * from goods")
+
+
+# 레코드 수정
+query = "update goods set name = 'gas range' where code=5"
+dbSendUpdate(conn, query)
+dbGetQuery(conn,"select * from goods")
+
+# 레코드 삭제
+query = "delete from goods where code=5"
+dbSendUpdate(conn, query)
+dbGetQuery(conn,"select * from goods")
+
+
+# db연결 종료 
+dbDisconnect(conn)
+
+
+

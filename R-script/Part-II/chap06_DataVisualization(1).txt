@@ -1,0 +1,67 @@
+﻿#############################
+##  1. 이산변수 시각화
+#############################
+
+#1) 막대차트 시각화
+install.packages("RSADBE")
+library(RSADBE)
+help("RSADBE") # Package 정보제공
+
+data(Severity_Counts) # RSADBE 패키지 제공 데이터셋
+str(Severity_Counts) 
+Severity_Counts # 버그 측정 데이터 셋
+
+
+# (1) 세로 막대 차트
+barplot(Severity_Counts, ylim=c(0,12000), 
+    col=rainbow(10), main ="소프트웨어 버그 측정 결과(BR/AR)",
+    font.main=4)
+
+# (2) 가로 막대 차트
+# xlab : x축 이름, xlim : x축 값 범위, horiz=T : 가로막대
+barplot(Severity_Counts,xlab="Bug Count", xlim=c(0,12000), 
+        horiz=T, col=rainbow(10)) # 10가지 무지개 색
+
+barplot(Severity_Counts,xlab="Bug Count", xlim=c(0,12000), 
+        horiz=T, col=rep(c(2, 4),5)) # red와 blue 색상 5회 반복
+
+barplot(Severity_Counts,xlab="Bug Count", xlim=c(0,12000), 
+        horiz=T, col=rep(c(1, 7),5)) 
+# 1 : 검정, 2: 빨강, 3: 초록, 4: 파랑, 5: 하늘색, 6: 자주색, 7 : 노랑색
+
+
+data(Bug_Metrics_Software) # RSADBE 패키지 제공 데이터셋
+Bug_Metrics_Software # 행렬 구조 - 1면(Before)과 2면(After) 구성
+# 5개의 소프트웨어 별로 발표전과 후 버그 측정 결과를 3차원 배열구조로 제공
+
+par(mfrow=c(1,2)) # 1행 2열 그래프 보기
+
+# Before Bug(1면)
+barplot(Bug_Metrics_Software[,,1], beside=T, 
+        col=c("lightblue","mistyrose","lightcyan","lavender","cornsilk"),
+        legend=c("JDT","PDE","Equinox","Lucene","Mylyn"))
+title(main ="Before Release Bug Frequency",font.main=4) 
+
+
+# After Bug(2면) 
+barplot(Bug_Metrics_Software[,,2], beside=F,
+        col=c("lightblue","mistyrose","lightcyan","lavender","cornsilk"),
+        legend=c("JDT","PDE","Equinox","Lucene","Mylyn"))
+title(main ="After Release Bug Frequency", font.main=4)
+
+#2) 점 차트 시각화
+par(mfrow=c(1,1)) # 1행 1열 그래프 보기
+
+dotchart(Severity_Counts, col=9:10, lcolor="black", pch=1:2,
+         labels=names(Severity_Counts),
+         main="Dot Plot for the Before and After", cex=1.2)
+
+
+#3) 파이 차트 시각화
+class(Severity_Counts) # "numeric"
+
+par(mfrow=c(1,2)) # 1행 2열 그래프 보기
+pie(Severity_Counts[c(1,3,5,7,9)]) # Bugs.BR
+title("Before Release Bug Frequency")
+pie(Severity_Counts[c(2,4,6,8,10)]) # Bugs.AR
+title("After Release Bug Frequency")

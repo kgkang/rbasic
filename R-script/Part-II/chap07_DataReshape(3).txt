@@ -1,0 +1,76 @@
+﻿######################################################
+# 3. reshape2 패키지 활용
+######################################################
+
+install.packages('reshape2')
+library(reshape2)
+
+# 1. dcast()함수 이용 : 긴 형식 -> 넓은 형식 변경
+# - '긴 형식'(Long format)을 '넓은 형식'(wide format)으로 모양 변경
+
+data <- read.csv("c:/Rwork/Part-II/data.csv")
+data
+
+# data.csv 데이터 셋 구성 - 22개 관측치, 3개 변수
+# Date : 구매날짜
+# Customer : 고객ID
+# Buy : 구매수량
+
+# (1) '넓은 형식'(wide format)으로 변형
+# 형식) dcast(데이터셋, 앞변수~뒤변수, 함수)
+# 앞변수 : 행 구성, 뒷변수 : 칼럼 구성
+
+wide <- dcast(data, Customer_ID ~ Date, sum)
+wide 
+
+
+# (2) 열 또는 행 단위 통계치 계산 함수 
+# - colSums(), rowSums(), colMeans(), rowMeans()
+
+# 고객별,날짜별 구매횟수의 합계 구하기
+rowSums(wide) # 행 합계 -> 고객별
+colSums(wide) # 열 합계 -> 날짜별
+
+# - cbind와 rbind() 이용하여 원래 데이터 셋에 붙임 
+wide <- cbind(wide, rowSums(wide)) # 컬럼으로 행 합계 붙임
+wide <- rbind(wide, colSums(wide)) # 행으로 컬럼 합계 붙임
+wide
+
+# - 컬럼명 변경 : 'Sum by User' 
+colnames(wide)
+colnames(wide)[9] <- 'Sum by User' # 9번째 컬럼명 변경
+
+# - 특정 셀값 변경 : 'Sum by day'
+wide[6,1] <- 'Sum by day'
+wide
+
+
+# 2. melt() 함수 이용 : 넓은 형식 -> 긴 형식 변경
+#   형식) melt(데이터셋, id='열이름 변수')
+
+wide <- wide[-6,-9] # 6행과 9컬럼 제거
+wide
+
+# - 긴 형식 변경
+long <- melt(wide, id='Customer_ID') 
+long
+# id변수를 기준으로 넓은 형식이 긴 형식으로 변경
+
+# - 칼럼명 수정.
+name <- c("Customer_ID", "Date", "Buy")
+colnames(long) <- name   
+head(long)
+
+data("smiths")
+smiths 
+
+# wide -> long
+long <- melt(id=1:2, smiths) # id:기준 칼럼 
+long
+
+# long -> wide
+dcast(long, subject + time~...)
+#-----------------------------------------------------------
+# < reshape2 패키지 관련 연습문제> 
+#------------------------------------------------------------
+

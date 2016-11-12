@@ -1,0 +1,114 @@
+﻿#######################
+## 1. lattice 패키지
+#######################
+
+install.packages("lattice")
+library(lattice)
+
+install.packages("mlmRev")
+library(mlmRev)
+data(Chem97) # Chem97 데이터 셋 로드
+
+str(Chem97) # 차원보기
+head(Chem97,30)
+
+# 1.histogram : 변수 대상으로 백분율 적용 히스토그램 생성
+# 형식1) (~x축, dataframe)
+histogram(~gcsescore, data=Chem97) 
+
+# 형식2) histogram(~x축 | 조건, dataframe)
+histogram(~gcsescore | score, data=Chem97) 
+histogram(~gcsescore | factor(score), data=Chem97) 
+
+# 2.densityplot : 밀도 그래프
+# 형식) (~x축 | 조건, dataframe, groups=변수)
+densityplot(~gcsescore | factor(score), data=Chem97, 
+            groups = gender, plot.points=T, auto.key = T) 
+
+
+# 차트 작성을 위한 데이터 리모델링 
+
+# 1) 데이터셋 가져오기
+data(VADeaths)
+VADeaths
+str(VADeaths)
+
+# 2) 데이터셋 구조보기
+mode(VADeaths) # numeric
+class(VADeaths) # matrix
+
+# 3) 데이터 리모델링(함수에서 데이터 처리 목적)
+# (1) matrix -> data.frame 변환
+df <- as.data.frame(VADeaths)
+str(df) 
+class(df) 
+df 
+
+# (2) matrix -> data.table 변환
+dft <- as.data.frame.table(VADeaths)
+str(dft)
+class(dft) 
+dft 
+
+
+# 3.barchart : 막대 그래프
+# 형식) (y~x | 조건, dataframe, layout)
+barchart(Var1 ~ Freq | Var2, data=dft, layout=c(4,1))
+
+
+# 4.dotplot : 점 그래프
+# 형식) (y~x | 조건 , dataframe, layout)
+dotplot(Var1 ~ Freq | Var2 , dft) 
+
+# Var2변수 단위(그룹화)로 점을 연결하여 플로팅  
+dotplot(Var1 ~ Freq, data=dft, groups=Var2, type="o", 
+        auto.key=list(space="right", points=T, lines=T))
+
+
+# 5.xyplot : xyplot()함수 확장
+# 형식) (y축~x축| 조건, dataframe or list)
+library(datasets)
+str(airquality) # airqulity 테이터 셋 로드
+
+# airquality의 Ozone(y),Wind(x) 산점도 플로팅
+xyplot(Ozone ~ Wind, data=airquality) 
+
+# Month변수 단위로 플로팅
+xyplot(Ozone ~ Wind | Month, data=airquality) 
+xyplot(Ozone ~ Wind | Month, data=airquality, layout=c(5,1))
+
+
+head(quakes) # quakes 데이터셋 로드
+str(quakes) 
+
+# 지진발생 위치(위도와 경로)
+xyplot(lat~long, data=quakes, pch=".")  
+# 그래프를 변수에 저장
+tplot<-xyplot(lat~long, data=quakes, pch=".")
+# 그래프에 제목 추가
+tplot2<-update(tplot,
+               main="1964년 이후 태평양에서 발생한 지진위치")
+print(tplot2)
+
+# 6. equal.count() : 지정된 범위 대상 영역구분과 카운팅
+# 형식) equal.count(data, number, overlap)
+
+# (1) 지진의 깊이를 3영역으로 구분하여 카운팅
+depthgroup<-equal.count(quakes$depth, number=3, overlap=0)
+depthgroup
+
+# (2) depthgroup변수 기준으로 플로팅
+xyplot(lat ~ long | depthgroup, data=quakes,
+       main="Fiji Earthquakes(depthgruop)",
+       ylab="latitude", xlab="longitude", pch="@", col='red' )
+
+
+# 7.cloud() :  3차원(위도, 경도, 깊이) 산점도 그래프
+cloud(depth ~ lat * long , data=quakes,
+      zlim=rev(range(quakes$depth)), 
+      xlab="경도", ylab="위도", zlab="깊이")
+
+# --------------------------------------------------------------------------
+# <연습문제1> lattice 패키지 관련 
+# --------------------------------------------------------------------------
+

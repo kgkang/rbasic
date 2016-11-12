@@ -1,0 +1,48 @@
+﻿########################
+## 3. 중복 데이터 시각화
+########################
+
+# (1) 데이터프레임으로 변환
+library(psych)
+freqData <- as.data.frame(table(galton$child, galton$parent))
+
+names(freqData)=c("child","parent", "freq") # 컬럼명 지정
+
+# (2) 프레임 -> 벡터 -> 수치데이터변환 -> 가중치 적용
+parent <- as.numeric(as.vector(freqData$parent))
+child <- as.numeric(as.vector(freqData$child))
+plot(child~parent, pch=21, col="blue", bg="green",
+     cex=0.15*freqData$freq, xlab="parent", ylab="child")
+
+########################
+# 4. 변수 간의 산점도 matrix
+########################
+
+data(iris)
+
+# 4개 변수 상호비교
+pairs(iris[,1:4]) # Sepal.Length Sepal.Width Petal.Length Petal.Width
+
+# Species=="virginica"인 경우만 4개 변수 상호비교
+iris[iris$Species=="virginica", 1:4]
+
+pairs(iris[iris$Species=="virginica", 1:4])
+pairs(iris[iris$Species=="setosa", 1:4])
+
+########################
+# 5. 차트 결과 파일 저장
+########################
+
+setwd("C:/Rwork/Part-II") # 폴더 지정
+jpeg("galton.jpg", width=720, height=480) # 픽셀 지정 가능
+
+plot(child~parent, data=galton) # y ~ x
+title(main="부모와 자식의 키 유전관계")
+out = lm(child~parent, data=galton)
+abline(out, col="red") 
+dev.off() # 장치 종료 
+
+
+# ------------------------------------------------------------------- 
+# <데이터 시각화 관련 연습문제> 
+# ------------------------------------------------------------------- 

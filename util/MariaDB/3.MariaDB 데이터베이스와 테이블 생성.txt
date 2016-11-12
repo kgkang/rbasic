@@ -1,0 +1,98 @@
+MariaDB 설치 및 사용
+
+
+MariaDB 실행
+[시작] 버튼 -> 모든 프로그램 -> MariaDB -> MySQL Client(MariaDB 10.1 (x.64)) 실행
+Enter password : 1234
+
+MariaDB [<none>] <- MariaDB 서버 로그인
+ 
+4. 데이터베이스 보기
+MariaDB [<none>] show databases;
+information_schema
+mysql
+performance_schema
+test <- 테스트용 데이터베이스
+
+5. test 데이터베이스 사용
+MariaDB [<none>] use test; // 테스트용 데이터베이스 
+Databases changed
+MariaDB [<test>]
+
+MariaDB [<test>] show tables; // 테이블 없음
+Empty set <0.00 sec>
+
+6. 사용자 데이터베이스 만들기
+MariaDB [<none>] create database work; // (↑키 사용)
+Query OK, 1 row affected <0.00 sec>
+MariaDB [<test>] show databases; // 데이터베이스 보기
+information_schema
+mysql
+performance_schema
+test 
+work <- 사용자 데이터베이스 생성 
+
+MariaDB [<test>] use work; // db 선택
+Databases changed
+
+7. 테이블 만들기 - goods
+MariaDB [<work>] create table goods(
+   -> code int primary key,
+   -> name varchar(20) not null,
+   -> su int,
+   -> dan int);
+Query OK, 0 row affected <0.13 sec>
+MariaDB [<work>] show tables;
++------------------+
+| Tables_in_work   |
++------------------+
+|  goods             |
++------------------+
+1 row in set <0.00 sec>
+
+8. 레코드 추가
+MariaDB [<work>] insert into goods values(1,'냉장고', 2, 850000);
+Query OK, 1 row affected <0.02 sec>
+MariaDB [<work>] insert into goods values(2,'세탁기', 3, 550000);
+Query OK, 1 row affected <0.02 sec>
+MariaDB [<work>] insert into goods values(3,'전자레인지', 2, 350000);
+Query OK, 1 row affected <0.02 sec>
+MariaDB [<work>] insert into goods values(4,'HDTV', 3, 1500000);
+Query OK, 1 row affected <0.02 sec>
+
+9. 레코드 검색
+MariaDB [<work>] select * from goods;
++-------+--------------+------+-----------+
+| code   | name          | su    |   dan      |
++-------+--------------+------+-----------+
+|     1    | 냉장고        |    2  |    850000 |
+|     2    | 세탁기        |    3  |    550000 |
+|     3    | 전자레인지   |    2  |    350000 |
+|     4    | HDTV         |    2  |   1500000 |
++-------+--------------+------+-----------+
+4 row in set <0.00 sec>
+
+10. MariaDB에 접속할 사용자 계정 만들기
+형식) create user '사용자id'@'접속IP' identified by '비밀번호';
+MariaDB [<work>] create user 'scott'@'localhost' identified by 'tiger';
+Query OK, 0 row affected <0.00 sec>
+
+형식) grant all privaileges on DB이름.* to '사용자ID'@'접속IP'';
+MariaDB [<work>] grant all privileges on work.* to 'scott'@'localhost';
+Query OK, 0 row affected <0.00 sec>
+
+// 권한설정 새로고침
+MariaDB [<work>] flush privileges; 
+Query OK, 0 row affected <0.00 sec>
+
+// DB 접속 종료
+MariaDB [<work>] quit
+MariaDB [<work>] Bye
+
+
+
+
+
+
+
+
