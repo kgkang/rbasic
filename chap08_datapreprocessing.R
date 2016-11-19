@@ -166,6 +166,14 @@ head(dataset2) # survey 결과 확인
 # <조건2> 직급 1 -> 1급, 직급 5 -> 5급로 코딩변경 후 position2 칼럼 추가   
 # ----------------------------------------------------------------------
 
+new_data$position[1:5]
+pos <- new_data$position
+cpos <- 6 - pos
+new_data$position2 <- cpos
+new_data$position2[1:5]
+
+
+
 #########################
 ## 5.정제된 데이터 저장
 #########################
@@ -209,10 +217,11 @@ head(new_data[c('age','age2','age3')])
 ## 6. 탐색적 분석을 위한 시각화 
 #############################
 
-# 1) 명목척도(범주/서열) : 명목척도(범주/서열) 
+# 1) 명목척도(범주/서열) vs 명목척도(범주/서열) 
 # - 거주지역과 성별 칼럼 시각화 
 resident_gender <- table(new_data$resident2, new_data$gender2)
 gender_resident <- table(new_data$gender2, new_data$resident2)
+gender_resident
 
 # 성별에 따른 거주지역 분포 현황 
 barplot(resident_gender, beside=T, horiz=T,  col = rainbow(5),
@@ -226,9 +235,9 @@ barplot(gender_resident, beside=T, col=rep(c(2, 4),5), horiz=T,
         legend=c("남자","여자"),  main = '거주지역별 성별 분포 현황') 
 
 
-# 2) 비율척도(연속) : 명목척도(범주/서열)
+# 2) 비율척도(연속) vs 명목척도(범주/서열)
 # - 나이와 직업유형에 따른 시각화 
-install.packages("lattice")
+install.packages("lattice") #격자 그랲 
 library(lattice)
 
 # 나이와 직업유형 데이터 분포  
@@ -237,7 +246,7 @@ densityplot( ~ age, data=new_data, groups = job2,
 # plot.points=T : 밀도, auto.key = T : 범례 
 
 
-# 3) 비율(연속),명목(범주/서열) : 명목(범주/서열)
+# 3) 비율(연속),명목(범주/서열) vs 명목(범주/서열)
 # - 구매비용(연속) : x칼럼 , 직급(서열):조건, 성별(범주):그룹   
 densityplot(~ price | factor(gender2), data=new_data, 
             groups = position2, plot.points=T, auto.key = T) 
@@ -247,12 +256,22 @@ densityplot(~ price | factor(position2), data=new_data,
             groups = gender2, plot.points=T, auto.key = T) 
 
 
-# 4) 비율(연속)2개 : 명목 
+# 4) 비율(연속)2개 vs 명목 
+# 형식 : (y~x | 범주 , 데이타 )
 xyplot(price ~ age | factor(gender2), data=new_data) 
 
 #######################
 ## 7.파생변수 생성
 #######################
+
+# 1 : N 관계
+# user_id  type
+# u001     아파트
+
+# 1 : 1 관계
+# user_id 주택 빌라 아파트 오피스텔
+# u001     0    0     1     0
+
 
 # - 기존 변수로 새로운 변수 생성
 # - 방법) 사칙연산 적용, 1:N 관계 -> 1:1 관계 변수 생성 
@@ -354,3 +373,12 @@ result
 choice2 <- sample(c(10:50, 70:150, 160:190),30)
 choice2
 
+
+
+# iris (150) -> train : 70%, test : 30%
+idx <- sample(1:nrow(iris),0.7*nrow(iris))
+idx
+train <- iris[idx,]
+test <- iris[-idx,]
+dim(train)
+dim(test)

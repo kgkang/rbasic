@@ -1,0 +1,105 @@
+﻿################################
+##  2. 패키지 이용 기술통계량 구하기
+################################
+ 
+########################<기술통계 패키지1>
+install.packages("Hmisc") # 패키지 설치
+library(Hmisc) # 메모리 로딩
+
+# 전체 변수 대상 기술통계량 제공 - 평균,중위수,분산,표준편차,valid.n 
+describe(data) # Hmisc 패키지에서 제공되는 함수
+
+# 개별 변수 기술통계량
+describe(data$gender) # 명목척도 
+describe(data$age) # 비율척도
+
+########################<기술통계 패키지2>
+install.packages("prettyR")
+library(prettyR)
+
+# 전체 변수 대상 기술통계량 제공     
+freq(data) # 각 변수별 : 빈도수, 결측치(NA), 백분율
+# 개별 변수 대상
+freq(data$gender) # 빈도수, 결측치(NA), 비율 
+###############################################################
+
+# --------------------------------------------------------------------------
+# <기술통계량 분석 관련 연습문제>
+# --------------------------------------------------------------------------
+
+################################
+#  3. 기술통계량 보고서 작성법
+################################
+
+# 1) 거주지역 
+data$resident2[data$resident == 1] <-"특별시"
+data$resident2[data$resident >=2 & data$resident <=4] <-"광역시"
+data$resident2[data$resident == 5] <-"시구군"
+
+x<- table(data$resident2)
+prop.table(x) # 비율 계산 
+y <-  prop.table(x)
+round(y*100, 2) #백분율 적용(소수점 2자리)
+
+
+# 2) 성별
+data$gender2[data$gender== 1] <-"남자"
+data$gender2[data$gender== 2] <-"여자"
+x<- table(data$gender2)
+
+prop.table(x) # 비율 계산 
+y <-  prop.table(x)
+round(y*100, 2) #백분율 적용(소수점 2자리)
+
+
+# 3) 나이
+summary(data$age)# 40 ~ 69
+data$age2[data$age <= 45] <-"중년층"
+data$age2[data$age >=46 & data$age <=59] <-"장년층"
+data$age2[data$age >= 60] <-"노년층"
+x<- table(data$age2)
+x
+prop.table(x) # 비율 계산 
+y <-  prop.table(x)
+round(y*100, 2) #백분율 적용(소수점 2자리)
+
+
+# 4) 학력수준
+data$level2[data$level== 1] <-"고졸"
+data$level2[data$level== 2] <-"대졸"
+data$level2[data$level== 3] <-"대학원졸"
+
+x<- table(data$level2)
+prop.table(x) # 비율 계산 
+y <-  prop.table(x)
+round(y*100, 2) #백분율 적용(소수점 2자리)
+
+# 5) 합격여부
+data$pass2[data$pass== 1] <-"합격"
+data$pass2[data$pass== 2] <-"실패"
+y<- table(data$pass2)
+y
+prop.table(x) # 비율 계산
+y <-  prop.table(x)
+round(y*100, 2) #백분율 적용(소수점 2자리)
+
+head(data)
+
+describe(data)
+summary(data$cost) 
+sum(data$cost) 
+
+describe(data)
+summary(data$survey) 
+sum(data$survey, na.rm=T) 
+
+
+# 기술통계량 정제 데이터 저장 
+setwd("c:/Rwork/Part-III")
+write.csv(data,"cleanDescriptive.csv", quote=F, row.names=F) # 행 이름 제거
+
+# <논문/보고서에서 표본의 인구통계적특성 결과 제시 방법>
+
+# --------------------------------------------------------------------------
+# <빈도분석 및 기술통계량 분석 관련 연습문제>
+# --------------------------------------------------------------------------
