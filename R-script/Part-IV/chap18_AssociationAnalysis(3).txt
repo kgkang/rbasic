@@ -1,0 +1,89 @@
+#########################################
+## 4. 연관규칙 결과 해석
+#########################################
+# - basket 형식의 transaction 객체 대상 
+
+setwd("c:/Rwork/Part-IV")
+result <- read.transactions("basket_format.csv", format="basket", sep=", ")
+result
+summary(result) # 기술통계 제공
+str(result) 
+ 
+rules <- apriori(result, parameter=list(supp=0.1, conf=0.1)) 
+inspect(rules) # 82개 규칙 - 연관성 조사 함수
+
+# supp=0.3으로 지지도를 높인 경우 support가 0.3이상인 결과만 나옴
+rules <- apriori(result, parameter=list(supp=0.3, conf=0.1)) 
+rules 
+inspect(rules) # 28개 규칙 
+
+plot(rules) # 지지도와 신뢰도, 향상도에 대한 산포도 그래프
+plot(rules, method="grouped")# LHS와 RHS 간의 지지도(size)와 향상도(color)
+
+plot(rules, method="graph", control=list(type="items")) 
+# 각 규칙별로 어떤 item들이 연관되어 있는지 네트워크 그래프로 보여줌
+
+plot(rules, method="graph", interactive=TRUE, control=list(type="items"))
+# interactive=TRUE 별도의 창 제공
+
+#########################################
+##  5. <<식료품점 파일 예제>> 
+#########################################
+
+# transactions 데이터 가져오기
+data("Groceries")
+str(Groceries)
+Groceries
+# <<식료품점 데이터 로딩>>
+#data(Groceries)
+#Groceries
+#transactions in sparse format with
+#9835 transactions (rows) and
+#169 items (columns)
+
+#itemFrequencyPlot(Groceries, topN=20, type="absolute") # 상위 20개 토픽
+# 지지도 0.001, 신뢰도 0.8
+rules <- apriori(Groceries, parameter=list(supp=0.001, conf=0.8))
+# writing ... [410 rule(s)] done [0.00s].
+inspect(rules) 
+
+# 최대 길이 3이내로 규칙 생성
+rules <- apriori(Groceries, parameter=list(supp=0.001, conf=0.8, maxlen=3))
+# writing ... [29 rule(s)] done [0.00s].
+inspect(rules) # 29개 규칙
+
+# confidence(신뢰도) 기준 내림차순으로 규칙 정렬
+rules <- sort(rules, decreasing=T, by="confidence")
+ 
+library(arulesViz) # rules값 대상 그래프를 그리는 패키지
+plot(rules, method="graph", control=list(type="items"))
+
+
+#######################################
+## 6. 특정 item 서브셋 작성/시각화
+#######################################
+
+# 오른쪽 item이 전지분유(whole milk)인 규칙만 서브셋으로 작성
+wmilk <- subset(rules, rhs %in% 'whole milk') # lhs : 왼쪽 item
+wmilk # set of 18 rules 
+inspect(wmilk)
+plot(wmilk, method="graph") #  연관 네트워크 그래프
+
+# 오른쪽 item이 other vegetables인 규칙만 서브셋으로 작성
+oveg <- subset(rules, rhs %in% 'other vegetables') 
+oveg # set of 10 rules 
+inspect(oveg)
+plot(oveg, method="graph") #  연관 네트워크 그래프
+
+# 오른쪽 item이 vegetables 단어가 포함된 규칙만 서브셋으로 작성
+veg <- subset(rules, rhs %pin% 'vegetables') # 포함 문자 
+veg # set of 10 rules 
+inspect(veg)
+
+# 왼쪽 item이 butter or yogurt인 규칙만 서브셋으로 작성
+butter_yogurt <- subset(rules, lhs %in% c('butter','yogurt'))
+butter_yogurt # set of 4  rules 
+inspect(butter_yogurt)
+plot(butter_yogurt, method="graph") #  연관 네트워크 그래프
+
+

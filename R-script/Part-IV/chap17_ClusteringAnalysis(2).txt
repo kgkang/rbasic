@@ -1,0 +1,53 @@
+#########################################
+# 4. 비계층적 군집분석(확인적 분석)
+#########################################
+# - 군집 수를 알고 있는 경우 이용하는 군집분석 방법
+# - 군집분석 종류 : 계층적 군집분석(탐색적), 비계층적 군집분석(확인적) 
+
+# 1) data set 준비 
+library(ggplot2)
+data(diamonds)
+
+nrow(diamonds) 
+t <- sample(1 : nrow(diamonds), 1000) # 1000개 셈플링 
+
+test <- diamonds[t, ] # 1000개 표본 추출
+dim(test) 
+
+head(test) # 검정 데이터
+mydia <- test[c("price","carat", "depth", "table")] # 4개 칼럼만 선정
+head(mydia)
+
+# 2) 비계층적 군집분석(확인적 분석) - kmeans()함수 이용
+# - 확인적 군집분석 : 군집의 수를 알고 있는 경우
+result2 <- kmeans(mydia, 3)
+result2 
+
+names(result2) 
+result2$cluster # 각 케이스에 대한 소속 군집수(1,2,3)
+
+# 3) 원형데이터에 군집수 추가
+mydia$cluster <- result2$cluster
+head(mydia) 
+
+# 4) 변수 간의 상관성 보기 
+plot(mydia[,-5])
+cor(mydia[,-5], method="pearson") # 상관계수 보기 
+
+library(corrgram) # 상관성 시각화 
+corrgram(mydia[,-5]) # 색상 적용 - 동일 색상으로 그룹화 표시
+corrgram(mydia[,-5], upper.panel=panel.conf) # 수치(상관계수) 추가(위쪽)
+
+
+# 5) 비계층적 군집시각화
+plot(mydia$carat, mydia$price)
+plot(mydia$carat, mydia$price, col=mydia$cluster)
+
+# 각 그룹의 중심점에 포인트 추가 
+points(result2$centers[,c("carat", "price")], col=c(3,1,2), pch=8, cex=5)
+
+#-----------------------------------------------------------
+#<연습문제2> 제품 판매 실적 데이터 군집분석
+#-----------------------------------------------------------
+
+

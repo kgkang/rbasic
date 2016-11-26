@@ -1,0 +1,64 @@
+#################################################
+# 2. rpart 패키지 적용 분류분석
+#################################################
+
+# 1. rpart()함수 간단 실습 
+install.packages("rpart")
+library(rpart)
+
+X11() # 별도창 
+formula <- Species ~ .
+iris.df <- rpart(formula, data=iris)
+iris.df  
+plot(iris.df ) # 트리 프레임 보임
+text(iris.df, use.n=T, cex=0.6) # 텍스트 추가
+post(iris.df, file="")
+# <해석>
+# iris의 Species(꽃의 종류)변수를 분류하는 가장 중요한 변수는 
+# Petal.Length와 Petal.Width로 나타난다. 
+
+
+# 2. rpart() 응용 실습
+#  weather.csv를 weather로 읽어서 RainTomorrow가 y변수, Data, RainTody를
+#  제외한 나머지 변수가 x변수가 되도록 하여 decision tree를 작성
+
+########################## <weather set> ###########################
+# Date(측정날짜) MinTemp(최저기온) MaxTemp(최대기온) Rainfall(강수량) 
+# Sunshine(햇빛)  WindGustDir(돌풍 방향) WindGustSpeed(돌풍 속도) 
+# WindDir(바람방향) WindSpeed(바람속도) Humidity(습도) Pressure(기압) 
+# Cloud(구름) Temp(온도) RainToday(오늘 비 여부) RainTomorrow(내일 비 여부) 
+#################################################################
+# 날씨에 따라서 비가 내릴지의 여부를 기록한 데이터이다. 
+# 이 데이터를 분석하면 어떤 날씨 조건에 비가 내릴지 또는 내리지 않을지에
+# 대한 판단 기준을 분석할 수 있다.
+#################################################################
+
+# 1) 데이터 가져오기
+# c:/Rwork/Part-IV/weather.csv 파일 선택
+weather = read.csv("c:/Rwork/Part-IV/weather.csv", header=TRUE) 
+
+# 2) 데이터 특성 보기
+str(weather) # data.frame':  366 obs. of  15 variables:
+names(weather) # 15개 변수명
+head(weather)
+
+# 3) 분류분석 - 의사결정트리 생성
+weather.df <- rpart(RainTomorrow~., 
+                    data=weather[, c(-1,-14)], cp=0.01)
+weather.df
+# cp 속성 값을 높이면 가지 수가 적어지고, 낮추면 가지 수가 많아진다.
+# cp 기본값은 0.01
+
+# 4) 분류분석 시각화
+X11()
+plot(weather.df) # 트리 프레임 보임
+text(weather.df, use.n=T, cex=0.7) # 텍스트 추가
+# post(weather.df, file="") # 타원제공 - rpart 패키지 제공 
+
+# <해설>
+# 분기조건이 참이면 왼쪽으로 분류되고, 거짓이면 오른쪽으로 분류된다.
+
+
+#--------------------------------------------------------------------
+# <연습문제2> 분류모델 예측 
+#--------------------------------------------------------------------

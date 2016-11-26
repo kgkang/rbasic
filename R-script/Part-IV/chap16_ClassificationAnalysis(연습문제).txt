@@ -1,0 +1,41 @@
+#<연습문제1>  product_sales.csv 파일을 읽어서 visit_count, buy_count, avg_price 칼럼을
+#    x변수로 tot_price 칼럼을 y변수로 하여 다음과 같이 분류모델를 생성하시오.
+
+# 변수설명  
+# tot_price : 총구매액
+# visit_count : 방문횟수, buy_count : 판매횟수, avg_price : 1회평균구매액
+
+# 단계1 : 데이터 가져오기
+sales <- read.csv("C:/Rwork/Part-IV/product_sales.csv") 
+str(sales)
+head(sales)
+
+# 단계2 :  학습데이터와 검정데이터 7:3 비율로 셈플링
+
+# 단계3 : formula 생성 : 종속변수 ~ 독립변수 
+
+# 단계4 : 분류모델 생성
+
+# 단계5 : 의사결정 트리 시각화 및 중요변수 해석
+#--------------------------------------------------------------------
+
+# <연습문제2> weather 데이터 셋을 7:3으로 나누어 weather_train, weather_test로 
+# 저장한 후 weather_train으로 분류모델을 생성하고, weather_test로 예측하시오. 
+# 비가 올 확률이 50% 이상이면 'Rain', 50% 미만이면 'No Rain'으로 빈도수를 
+# 출력하시오.
+
+# 조건) y변수 : RainTomorrow, x변수 : Date와 RainToday변수를 제외한 나머지 변수
+# 힌트) 분류모델에 대한 예측은 predict()함수 이용
+
+# (1) 데이터 가져오기
+weather = read.csv("c:/Rwork/Part-IV/weather.csv", header=TRUE) 
+
+# (2) 데이터 셈플링
+
+# (3) 분류모델 생성
+
+# (4) 분류모델 예측 : 검정데이터로 예측
+
+# (5) 비올 확률 빈도수 출력 
+
+#--------------------------------------------------------------------

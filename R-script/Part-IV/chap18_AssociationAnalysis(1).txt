@@ -1,0 +1,92 @@
+###################################################
+# 연관분석(Association Analysis)
+###################################################
+# 활용분야
+# - 대형 마트, 백화점, 쇼핑몰 등에서 고객의 장바구니에 들어있는 품목 간의 
+#   관계를 탐구하는 용도
+# ex) 고객들은 어떤 상품들을 동시에 구매하는가?
+#   - 맥주를 구매한 고객은 주로 어떤 상품을 함께 구매하는가?
+
+#########################################
+# 1. 연관규칙 평가 척도
+#########################################
+
+# 연관규칙의 평가 척도
+# 1. 지지도(support) : 전체자료에서 관련 품목의 거래 확률
+#  -> A와 B를 포함한 거래수 / 전체 거래수
+# 2. 신뢰도(confidence) : A가 구매될 때 B가 구매될 확률(조건부 확률)
+#  -> A와 B를 포함한 거래수 / A를 포함한 거래수
+# 3. 향상도(Lift) : 상품 간의 독립성과 상관성을 나타내는 척도 
+#  -> 신뢰도 / B가 포함될 거래율
+
+# <지지도와 신뢰도 예시>
+# t1 : 라면,맥주,우유
+# t2 : 라면,고기,우유
+# t3 : 라면,과일,고기
+# t4 : 고기,맥주,우유
+# t5 : 라면,고기,우유
+# t6 : 과일,우유
+
+#         A -> B                지지도        신뢰도        향상도
+# 맥주 -> 고기             1/6=0.166    1/2=0.5      0.5/0.66(4/6)=0.75
+
+
+## 연관성 규칙 분석을 위한 패키지
+install.packages("arules") # association Rule
+# read.transactions(), inspect(), apriori(), Adult 데이터셋 제공
+library(arules) #read.transactions()함수 제공
+
+
+# 1. transaction 객체 생성(파일 이용)
+setwd("c:/Rwork/Part-IV")
+tran<- read.transactions("tran.txt", format="basket", sep=",")
+tran
+
+# 2. transaction 데이터 보기
+inspect(tran)
+
+# 3. rule 발견(생성) - 지지도,신뢰도 = 0.1
+# 형식) apriori(transaction data,  parameter=list(supp, conf))
+
+rule<- apriori(tran, parameter = list(supp=0.3, conf=0.1)) # 16 rule
+rule<- apriori(tran, parameter = list(supp=0.1, conf=0.1)) # 35 rule 
+inspect(rule) # 규칙 보기
+
+
+#########################################
+# 2. 트랜잭션 객체 생성과 연관규칙 생성 
+#########################################
+
+#형식)
+#read.transactions(file, format=c("basket", "single"),
+#      sep = NULL, cols=NULL, rm.duplicates=FALSE,encoding="unknown")
+#----------------------------------------------------------------------------------
+# format : data set의 형식 지정(basket 또는 single)
+  # -> single :  transaction ID에 의해서 상품(item)이 대응된 경우
+  # -> basket : 여러개의 상품으로 구성 -> transaction ID 없이 여러 상품(item) 구성
+# sep : 상품 구분자
+# cols : single인 경우 읽을 컬럼 수 지정, basket은 생략(transaction ID가 없는 경우)
+# rm.duplicates : 중복 트랜잭션 항목 제거
+#----------------------------------------------------------------------------------
+
+# (1) single 트랜잭션 객체 생성
+setwd("c:/Rwork/Part-IV")
+stran <- read.transactions("demo_single",format="single",cols=c(1,2)) 
+inspect(stran)
+
+# [실습] 중복 트랜잭션 객체 생성
+stran2<- read.transactions("single_format.csv", format="single", sep=",", 
+                                    cols=c(1,2), rm.duplicates=T)
+stran2
+#transactions in sparse format with
+#248 transactions (rows) and
+#68 items (columns)
+
+
+# (2) basket 트랜잭션 데이터 가져오기
+btran <- read.transactions("demo_basket",format="basket",sep=",") 
+inspect(btran) # 트랜잭션 데이터 보기
+
+#-----------------------------------------------
+#  연습문제1 - 트랜잭션 객체 생성 관련
+#-----------------------------------------------
